@@ -23,6 +23,7 @@ jobs:
         echo "done"
 
     - name: build the proxy
+      if: 1 == 2
       run: |
         cd ../proxy
         #eval $(minikube docker-env)
