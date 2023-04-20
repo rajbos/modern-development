@@ -25,7 +25,7 @@ jobs:
     - name: build the proxy
       run: |
         cd ../proxy
-        eval $(minikube docker-env)
+        #eval $(minikube docker-env)
         mvn clean package
         mvn dockerfile:build
 
