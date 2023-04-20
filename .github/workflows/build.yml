@@ -44,10 +44,10 @@ jobs:
         docker build -t api .
         docker run -d -p 8080:8080 api
 
-        # wait a bit
+        echo "Wait a bit for the container to be up"
         sleep 10
 
-        # call the api
+        echo "Calling the api:"
         curl localhost:8080/hello
         echo "" # line break
 
@@ -55,7 +55,7 @@ jobs:
         content=$(echo $result | jq -r '.content')
 
         if [ "$content" == "Hello World" ] ; then
-          echo "Got expected result" | tee $GITHUB_STEP_SUMMARY
+          echo "Got expected result :+1:" | tee $GITHUB_STEP_SUMMARY
         else
-          echo "Did not get expected result but [$content]" | tee $GITHUB_STEP_SUMMARY
+          echo ":alert: Did not get expected result but [$content]" | tee $GITHUB_STEP_SUMMARY
         fi
