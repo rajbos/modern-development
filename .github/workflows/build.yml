@@ -14,6 +14,8 @@ jobs:
         cd api
         ls -la
         eval $(minikube docker-env)
+        echo "show version"
+        mvn -v
         echo "cleaning"
         mvn clean package
         echo "building"
