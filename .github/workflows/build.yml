@@ -38,8 +38,8 @@ jobs:
         minikube service api -n my-apps
 
     - name: b
-      run: |
-        cd ../api
+      run: |        
+        cd $GITHUB_WORKSPACE/api
         docker build -t api .
         docker run -p 8080:8080 api
 
