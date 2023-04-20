@@ -52,10 +52,10 @@ jobs:
         echo "" # line break
 
         result=$(curl -s localhost:8080/hello)
-        content=$(echo $result | jq '.content')
+        content=$(echo $result | jq -r '.content')
 
         if [ "$content" == "Hello World" ] ; then
-          echo "Got expected result" 
+          echo "Got expected result" | tee $GITHUB_STEP_SUMMARY
         else
-          echo "Did not get expected result but [$content]"  
+          echo "Did not get expected result but [$content]" | tee $GITHUB_STEP_SUMMARY
         fi
