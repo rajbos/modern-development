@@ -44,4 +44,16 @@ jobs:
         docker build -t api .
         docker run -d -p 8080:8080 api
 
+        # wait a bit
+        sleep 10
+
+        # call the api
         curl localhost:8080/hello
+
+        result="$(curl -s localhost:8080/hello)"
+        content=$(echo $result | jq '.content')
+        if [ "$content" == "Hello World" ] ; then
+          echo "Got expected result" 
+        else
+          echo "Did not get expected result but [$content]"  
+        fi
