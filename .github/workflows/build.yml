@@ -8,13 +8,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: build the api
       run: |
         cd api
+        ls -la
         eval $(minikube docker-env)
+        echo "cleaning"
         mvn clean package
+        echo "building"
         mvn dockerfile:build
+        echo "done"
 
     - name: build the proxy
       run: |
