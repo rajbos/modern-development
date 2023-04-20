@@ -1,0 +1,35 @@
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: build the api
+      run: |
+        cd api
+        eval $(minikube docker-env)
+        mvn clean package
+        mvn dockerfile:build
+
+    - name: build the proxy
+      run: |
+        cd ../proxy
+        eval $(minikube docker-env)
+        mvn clean package
+        mvn dockerfile:build
+
+    - name: a
+      if: 1 == 2
+      run: |
+        kubectl create -f sidecar-deploy.yml 
+        kubectl expose pod api -n my-apps — type=NodePort — port 8081
+        minikube service api -n my-apps
+
+    - name: b
+      run: |
+        cd ../api
+        docker build -t api .
+        docker run -p 8080:8080 api
+
+        curl localhost:8080/hello
