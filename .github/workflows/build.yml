@@ -13,7 +13,7 @@ jobs:
       run: |
         cd api
         ls -la
-        eval $(minikube docker-env)
+        #eval $(minikube docker-env)
         echo "show version"
         mvn -v
         echo "cleaning"
