@@ -59,3 +59,31 @@ jobs:
         else
           echo ":alert: Did not get expected result but [$content]" | tee $GITHUB_STEP_SUMMARY
         fi
+
+  testing:
+    runs-on: ubuntu-latest
+      # run the docker container with the app as a sidecar
+    service:
+      api:
+        image: api
+        ports:
+          - 8080:8080
+    steps:
+      # call the api and verify the result
+      - name: Call the api
+        run: |
+          echo "Wait a bit for the container to be up"
+          sleep 10
+
+          echo "Calling the api:"
+          curl localhost:8080/hello
+          echo "" # line break
+
+          result=$(curl -s localhost:8080/hello)
+          content=$(echo $result | jq -r '.content')
+
+          if [ "$content" == "Hello World" ] ; then
+            echo "Got expected result :+1:" | tee $GITHUB_STEP_SUMMARY
+          else
+            echo ":alert: Did not get expected result but [$content]" | tee $GITHUB_STEP_SUMMARY
+          fi
