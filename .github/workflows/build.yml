@@ -58,7 +58,7 @@ jobs:
     needs: build
     services:
       api:
-        image: api
+        image: ghcr.io/rajbos/modern-development/api:latest
         ports:
           - 8080:8080
     steps:
