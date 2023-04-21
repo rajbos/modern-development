@@ -7,6 +7,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
     - uses: actions/checkout@v3
 
@@ -41,6 +44,9 @@ jobs:
     # push the container to ghcr.io
     - name: Push the container to ghcr.io
       run: |
+        # prevent this error: denied: installation not allowed to Create organization package
+
+
         echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
         docker tag api ghcr.io/${{ github.repository }}/api
         docker push ghcr.io/${{ github.repository }}/api
