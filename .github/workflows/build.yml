@@ -13,32 +13,10 @@ jobs:
     - name: build the api
       run: |
         cd api
-        ls -la
-        #eval $(minikube docker-env)
-        echo "show version"
-        mvn -v
-        echo "cleaning"
-        mvn clean package
-        echo "building"
-        mvn dockerfile:build
-        echo "done"
-
-    - name: build the proxy
-      if: 1 == 2
-      run: |
-        cd ../proxy
-        #eval $(minikube docker-env)
         mvn clean package
         mvn dockerfile:build
 
-    - name: a
-      if: 1 == 2
-      run: |
-        kubectl create -f sidecar-deploy.yml 
-        kubectl expose pod api -n my-apps — type=NodePort — port 8081
-        minikube service api -n my-apps
-
-    - name: b
+    - name: build the docker container
       run: |        
         cd $GITHUB_WORKSPACE/api
         docker build -t api .
@@ -59,11 +37,19 @@ jobs:
         else
           echo ":alert: Did not get expected result but [$content]" | tee $GITHUB_STEP_SUMMARY
         fi
-
+      
+    # push the container to ghcr.io
+    - name: Push the container to ghcr.io
+      run: |
+        echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        docker tag api ghcr.io/${{ github.repository }}/api
+        docker push ghcr.io/${{ github.repository }}/api
+  
+  # run the docker container with the app as a sidecar
   testing:
     runs-on: ubuntu-latest
     container: ubuntu:latest
-    # run the docker container with the app as a sidecar
+    needs: build
     services:
       api:
         image: api
