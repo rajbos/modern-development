@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ubuntu:latest
     # run the docker container with the app as a sidecar
-    service:
+    services:
       api:
         image: api
         ports:
